@@ -1,0 +1,66 @@
+html {
+  overflow: hidden;
+}
+
+.editable-cell {
+  position: relative;
+}
+
+.editable-cell-value-wrap {
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.editable-row:hover .editable-cell-value-wrap {
+  padding: 4px 11px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+}
+
+[data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
+  border: 1px solid #434343;
+}
+
+tr .ant-form-item {
+  margin-bottom: 0;
+}
+
+.left-side {
+  border-right: 1px solid #ddd;
+}
+
+.App {
+  display: inline;
+}
+
+.form-data-container {
+  width: calc(100vw - 699px);
+  display: inline;
+}
+
+.form-data-builder {
+  width: 700px;
+}
+
+.ant-layout {
+  background: transparent;
+}
+
+.node-selected {
+  border: 1px solid #333;
+}
+
+.node-selected > div > .node-element:hover, .node-selected > .node-element:hover {
+  outline: 1px dashed  rgb(112, 112, 112);
+  outline-offset: -2px;
+  cursor: pointer;
+}
+
+.element-selected, .element-selected:hover  {
+  outline: 2px solid rgb(165, 72, 237) !important;
+  outline-offset: -3px  !important;
+}
+
+.ant-layout-header {
+  background-color: #f0f2f5;
+}
