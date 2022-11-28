@@ -1,12 +1,10 @@
 import React from "react";
 import {
-    Button, Checkbox, Form, Input, InputNumber, Radio, FormInstance,
-    Layout, Divider, Select, Space
-
+    Button, Checkbox, Form, Input, InputNumber, Radio, Divider, Select, Space
 } from 'antd';
-import { DynamicFormSchema, Field, Value } from './models/dynamic-form-schema';
+import { DynamicFormSchema, Field } from './models/dynamic-form-schema';
 import Autocomplete from './autocomplete';
-import { getDollarValue, allForms, fetchList, handleSubscriptions, isInitialLoading, defineGlobalSubscriptionPath, defineGlobalFieldPath, masterdata } from './services/dynamic-form-service';
+import { getDollarValue, allForms, fetchList, defineGlobalSubscriptionPath, defineGlobalFieldPath, masterdata } from './services/dynamic-form-service';
 
 
 
@@ -23,13 +21,13 @@ const DynamicFormItem = ({
 }): JSX.Element => {
 
     let [value, setValue] = React.useState();
-   // console.log('--' ,data.name, allForms[data.name])
+    // console.log('--' ,data.name, allForms[data.name])
     const field: Field = allForms[data.name].formData.fields[fieldName];
-    
+
     field.name = fieldName;
     defineGlobalSubscriptionPath(data.name, field);
     defineGlobalFieldPath(data.name, fieldName)
-    
+
 
 
     const [fetching, setFetching] = React.useState(false);
@@ -37,7 +35,7 @@ const DynamicFormItem = ({
     const fetchRef = React.useRef(0);
     const rules = [{ required: field.required, message: `${field.label} is required!` }];
 
-    
+
     const itemProps = {
         key: fieldName,
         label: data.mode == 'form' ? field.label : undefined,

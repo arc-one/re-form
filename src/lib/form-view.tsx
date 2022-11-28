@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Form, FormInstance, Col, Row, Divider, PageHeader } from 'antd';
+import { Form, Col, Row, Divider, Layout } from 'antd';
 import { DynamicFormSchema } from './models/dynamic-form-schema';
 import DynamicFormItem from './form-item';
-import { allForms, drop, dragStart, dragEnter, getSelectedNode } from './services/dynamic-form-service';
-import { getForm, setForm } from "./index";
-
+import { allForms, drop, dragStart, dragEnter } from './services/dynamic-form-service';
 
 const FormRow = (props: any): JSX.Element => {
 
@@ -38,24 +36,18 @@ const FormRow = (props: any): JSX.Element => {
 
                 Object.keys(props.data.groups).map((groupName: string, groupIndex) => {
                     const group = props.data.groups[groupName];
-
                     if (group.display === false) return null;
-
                     let groupHeader;
                     if (group.title || group.subTitle) {
-
-                        groupHeader = <PageHeader
+                        groupHeader = <Layout
                             style={{ paddingLeft: '0px' }}
-                            title={group.title}
-                            subTitle={group.subTitle}
-                        />
-
+                  
+                        // subTitle={group.subTitle}
+                        >{group.title}</Layout>
                     }
 
                     return <div style={{ width: '100%' }} key={`group-${groupName}`}>
-
                         {groupHeader}
-
                         <Row
                             id={props.data.name + '-node'}
                             //ref={myRefname}
@@ -70,14 +62,20 @@ const FormRow = (props: any): JSX.Element => {
                                             draggable={props.data.editMode}
                                             onDragStart={(e) => dragStart(e, index)}
                                             onDragEnter={(e) => dragEnter(e, index)}
-                                            onDragEnd={(e:any) => drop(e, props)}
-                                            onClick={(e) => {
+                                            onDragEnd={(e: any) => drop(e, props)}
+                                            onClick={(e: any) => {
                                                 if (props.onClick) {
-                                                    props.onClick({ field, data: props.data, key: props.indexValues, domEvent: e });
+
+                                                    const elementData = e?.target?.closest('.element-selected')?.id?.split('-');
+                                                    const clicked: any = {};
+                                                    if (elementData && elementData[0]) clicked.formName = elementData[0];
+                                                    if (elementData && elementData[1]) clicked.fieldName = elementData[1];
+
+                                                    props.onClick({ field, data: props.data, key: props.indexValues, domEvent: e, clicked });
                                                 }
                                             }}
                                             id={props.data.name + '-' + fieldName + '-element'}
-                                            className="element"
+                                            className={props.data.editMode ? "element edit-mode" : "element"}
                                             form-name={props.data.name}
                                             // ref={myRefname}
                                             key={`col-${fieldName}`}
@@ -89,8 +87,6 @@ const FormRow = (props: any): JSX.Element => {
                                 })
                             }
                         </Row>
-
-
                     </div>
                 })
             }
@@ -100,9 +96,7 @@ const FormRow = (props: any): JSX.Element => {
 }
 
 const FormView = ({ data, onChange, onClick, onDrop }: { data: DynamicFormSchema, onChange?: any, onClick?: any, onDrop?: any }): JSX.Element => {
-
     let formData = data;
-
     return <> {
         formData.values.map((formValues: any, indexValues: any) => {
             formData.values[indexValues].key = indexValues;

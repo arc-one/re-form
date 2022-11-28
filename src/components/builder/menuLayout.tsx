@@ -1,10 +1,9 @@
 
-import DynamicForm, { getValue, getForm, setForm, getValues, addRow, removeRow, setFields, setValues } from '../lib/index';
-import { DynamicFormSchema, Field } from '../lib/models/dynamic-form-schema';
-import { menuData } from './menuData';
-import { builderFieldData, builderFieldInitialValues } from './builderFieldData';
-import { allForms, setSelectedNode, getSelectedNode, unSelectNode, selectNode, getMasterdata } from '../lib/services/dynamic-form-service';
-import { handleMenuSelect, handleFormMenuSelect } from '../system/_common';
+import { getForm, setForm } from '../../lib/index';
+import { DynamicFormSchema } from '../../lib/models/dynamic-form-schema';
+import { formFieldInitialValues } from './formFieldInitialValues';
+import { allForms, getSelectedNode, unSelectNode, selectNode, getMasterdata } from '../../lib/services/dynamic-form-service';
+import { handleMenuSelect, handleFormMenuSelect } from './services/_common';
 
 
 export const menuLayout: DynamicFormSchema = {
@@ -27,10 +26,15 @@ export const menuLayout: DynamicFormSchema = {
             defaultSelectedKeys: ['formProperties']
         },
         fieldsPropertiesTitle: {
-            type: "content",
+            type: "layout",
+            padding: "20px 30px 10px",
+            fontSize: 14,
+            //fontType: ""
+
         },
         fieldsMenu: {
             type: "menu",
+            //height: "calc(100vh - 200px)",
             ref: {
                 formName: 'menuData',
             },
@@ -40,7 +44,7 @@ export const menuLayout: DynamicFormSchema = {
             },
             onSelect: (props: any) => {
                 const _menuData = getMasterdata('menuData')
-                const row = { ...builderFieldInitialValues, ..._menuData.values[props.key * 1] };
+                const row = { ...formFieldInitialValues, ..._menuData.values[props.key * 1] };
 
                 handleMenuSelect(props.data, row, props.key * 1);
                 let selectedNode = getSelectedNode();
@@ -52,6 +56,7 @@ export const menuLayout: DynamicFormSchema = {
         addField: {
             type: 'button',
             value: "Add Field",
+            padding: "10px",
             // buttontype:'primary',
             onButtonClick: (props: any) => {
 
@@ -67,7 +72,7 @@ export const menuLayout: DynamicFormSchema = {
 
                 const newFieldID = Math.floor(Math.random() * 100000);
                 const menuData = getMasterdata('menuData');
-                const newField: any = { ...builderFieldInitialValues, label: 'Field ' + newFieldID, name: 'field' + newFieldID, type, span };
+                const newField: any = { ...formFieldInitialValues, label: 'Field ' + newFieldID, name: 'field' + newFieldID, type, span };
                 menuData.values.push(newField);
                 const menuLayout = getForm('menuLayout');
                 allForms['menuLayout'].setFormData({ ...menuLayout });

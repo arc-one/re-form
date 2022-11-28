@@ -1,6 +1,7 @@
 import { DynamicFormSchema, Field, Subscription } from '../models/dynamic-form-schema';
 import { FormInstance } from 'antd';
 import { getForm, setForm } from "../index";
+import _ from "lodash";
 
 let reqs: any = {};
 export let isInitialLoading = true;
@@ -12,6 +13,23 @@ export let masterdata: any = {};
 let selectedNode: any = {};
 let dragItem: any;
 let dragOverItem: any;
+let singleClickedID: string | undefined;
+let doubleClickedID: string | undefined;
+
+export const setSingleClickedID = (_clickedID: any) => {
+  singleClickedID = _clickedID;
+}
+export const getSingleClickedID = () => {
+  return singleClickedID;
+}
+
+export const setDoubleClickedID = (_clickedID: any) => {
+  doubleClickedID = _clickedID;
+}
+export const getDoubleClickedID = () => {
+  return doubleClickedID;
+}
+
 
 export const setMasterdata = (_masterdata: any) => {
   masterdata = { ...masterdata, ..._masterdata };
@@ -31,6 +49,11 @@ export const getSelectedNode = () => {
 export const selectNode = (selectedNode: any) => {
   if (selectedNode?.form) {
     document.getElementById(selectedNode?.form + '-node')?.classList?.add('node-selected');
+
+    const elements: any = document.getElementById(selectedNode?.form + '-node')?.childNodes;
+    elements.forEach((elem: any) => {
+      elem.classList?.add('selectable-element')
+    })
   }
   if (selectedNode?.field) {
     document.getElementById(selectedNode?.form + '-' + selectedNode?.field + '-element')?.classList?.add('element-selected');
@@ -39,51 +62,94 @@ export const selectNode = (selectedNode: any) => {
 export const unSelectNode = (selectedNode: any) => {
   if (selectedNode?.form) {
     document.getElementById(selectedNode?.form + '-node')?.classList?.remove('node-selected');
+    const elements: any = document.getElementById(selectedNode?.form + '-node')?.childNodes;
+    elements.forEach((elem: any) => {
+      elem.classList?.remove('selectable-element');
+    })
   }
   if (selectedNode?.form && selectedNode?.field) {
     document.getElementById(selectedNode?.form + '-' + selectedNode?.field + '-element')?.classList?.remove('element-selected');
   }
 }
-export const handleOnclickForEditMode = (onClickProps: any) => {
-  let selectedNode = getSelectedNode();
-  if (onClickProps.data.editMode && selectedNode?.form) {
-    
-    if (onClickProps.domEvent.detail == 1) {
-      const selectedFormData = allForms[selectedNode?.form].formData;
-      if (selectedFormData.fields[onClickProps?.field?.name]) { // if single click
+
+
+let _in: boolean = false;
+export const handleOnclickForEditMode = (onClickProps: any, props: any) => {
+
+  let selectedData = {...selectedNode};
+  if (selectedNode?.form) {
+    if (onClickProps.domEvent.detail == 1 && !_in) {
+
+      const directClick = onClickProps.domEvent.target.closest('.selectable-element.edit-mode');
+      if (!directClick) return;
+      const childElement = directClick?.id?.split('-');
+      const clickedFormName = childElement[0];
+      const clickedFieldName = childElement[1];
+      const clickedForm = getForm(clickedFormName);
+
+      if (clickedForm.fields[clickedFieldName]) {
+        const newSelectedNode = {
+          form: clickedForm?.name,
+          field: clickedFieldName
+        }
+        selectedData = {...newSelectedNode};
         unSelectNode(selectedNode);
-        selectedNode = setSelectedNode({
-          form: selectedFormData?.name,
-          field: onClickProps?.field?.name
-        })
+        selectedNode = setSelectedNode({...newSelectedNode})
         selectNode(selectedNode);
       }
-    } else if (onClickProps.domEvent.detail > 1) { // if double click
-      let newSelectedForm: DynamicFormSchema = onClickProps?.data?.values[0][onClickProps.field.name]?.value;
-      console.log('newSelectedForm', newSelectedForm)
-      if(!newSelectedForm) return;
-      const parentForm = selectedNode.parents[selectedNode.parents?.length - 1];
-      if (parentForm == onClickProps?.data.name && onClickProps?.data.name !== selectedNode?.form) {
-        unSelectNode(selectedNode);
-        selectedNode = setSelectedNode({
-          parents: selectedNode.parents.filter((parent: string) => parent !== parentForm),
-          form: parentForm,
+    }
+    if (onClickProps.domEvent.detail > 1 && !_in) {
+      const directClick = onClickProps.domEvent.target.closest('.element-selected');
+      if (directClick) {
+
+        const childElement = directClick?.id?.split('-');
+        const clickedFormName = childElement[0];
+        const clickedFieldName = childElement[1];
+        const clickedForm = getForm(clickedFormName);
+
+        let newSelectedForm: DynamicFormSchema = clickedForm?.values[0][clickedFieldName]?.value || clickedForm?.values[0][clickedFieldName];
+
+        if (newSelectedForm) {
+          if (newSelectedForm?.mode == 'form' || newSelectedForm?.mode == 'layout' || newSelectedForm?.mode == 'table') {
+
+            const newSelectedNode = {
+              parents: _.uniq([...selectedNode.parents, clickedForm.name]),
+              form: newSelectedForm.name,
+              field: undefined
+            }
+            selectedData = {...newSelectedNode};
+            unSelectNode(selectedNode);
+            selectedNode = setSelectedNode({...newSelectedNode});
+            selectNode(selectedNode);
+          }
+        }
+      } else {
+
+        if (selectedNode.field === onClickProps.field.name) return;
+        const parentFormName = selectedNode.parents[selectedNode.parents?.length - 1];
+
+        if (!parentFormName) return;
+
+        const newSelection = {
+          parents: selectedNode.parents.filter((parent: string) => parent !== parentFormName),
+          form: parentFormName,
           field: undefined
-        });
-        newSelectedForm = onClickProps?.data;
-      }
-      if (newSelectedForm?.mode == 'form' || newSelectedForm?.mode == 'layout' || newSelectedForm?.mode == 'table') {
+        }
+        selectedData = {...newSelection};
         unSelectNode(selectedNode);
-        selectedNode = setSelectedNode({
-          parents: [...selectedNode.parents, onClickProps.data.name],
-          form: newSelectedForm.name,
-          field: undefined
-        });
+        selectedNode = setSelectedNode(newSelection);
         selectNode(selectedNode);
       }
     }
   }
-  return selectedNode;
+  _in = true;
+  setTimeout(() => {
+    _in = false;
+    setSingleClickedID(undefined);
+    setDoubleClickedID(undefined);
+  });
+
+  return selectedData;
 }
 
 const getDragElement = (e: any) => {
@@ -93,9 +159,9 @@ const getDragElement = (e: any) => {
   const closest = e.target?.closest(path);
   const elementData = closest?.id?.split('-');
 
-  if(!elementData) return;
+  if (!elementData) return;
 
-  const index = Object.keys(selectedForm.fields).findIndex((field:string, key: number) => field === elementData[1]);
+  const index = Object.keys(selectedForm.fields).findIndex((field: string, key: number) => field === elementData[1]);
   elementData.push(index)
   return elementData;
 }
@@ -111,7 +177,7 @@ export const dragStart = (e: any, position: any) => {
   }
 };
 
-export const dragEnter = (e: any, position: any) => { 
+export const dragEnter = (e: any, position: any) => {
   if (!selectedNode?.form) return;
   dragOverItem = undefined;
   const elementData = getDragElement(e);
@@ -145,10 +211,11 @@ export const drop = (e: any, props: any) => {
     }
     dragForm.fields = reorderedFields;
     setForm(dragForm.name, dragForm);
+    unSelectNode({...selectedNode});
+    setTimeout(() => selectNode({...selectedNode}));
     if (props?.onDrop) {
       props.onDrop({ data: dragForm, dragItem, dragOverItem });
     }
-
   }
 };
 

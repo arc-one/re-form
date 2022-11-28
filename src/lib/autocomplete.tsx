@@ -1,7 +1,7 @@
 import React from 'react';
 import { AutoComplete, Select } from 'antd';
 import debounce from 'lodash/debounce';
-import { fetchList  } from './services/dynamic-form-service';
+import { fetchList } from './services/dynamic-form-service';
 
 const DebounceSelect = (props: any) => {
 
@@ -44,10 +44,10 @@ const DebounceSelect = (props: any) => {
     autocompleteProps.options = options;
   }
 
-  if(props.value && autocompleteProps.mode !== 'multiple') autocompleteProps.defaultValue=props.value.label;
-  if(props.value?.length && autocompleteProps.mode == 'multiple') autocompleteProps.defaultValue=props.value;
-  
-  let element = <AutoComplete  onSelect={(value: any) => props.onChange(props, value)} {...autocompleteProps} />
+  if (props.value && autocompleteProps.mode !== 'multiple') autocompleteProps.defaultValue = props.value.label;
+  if (props.value?.length && autocompleteProps.mode == 'multiple') autocompleteProps.defaultValue = props.value;
+
+  let element = <AutoComplete onSelect={(value: any) => props.onChange(props, value)} {...autocompleteProps} />
   if (autocompleteProps.mode === 'multiple') {
 
     element = <Select mode="multiple"  {...autocompleteProps} onChange={(value: any) => props.onChange(props, value)} />

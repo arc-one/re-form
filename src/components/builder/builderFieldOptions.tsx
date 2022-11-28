@@ -1,4 +1,4 @@
-import { DynamicFormSchema, Field } from '../lib/models/dynamic-form-schema';
+import { DynamicFormSchema } from '../../lib/models/dynamic-form-schema';
 
 export const builderFieldOptions: DynamicFormSchema = {
     name: "builderFieldOptions",

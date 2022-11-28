@@ -1,20 +1,21 @@
-import React, { useState, useRef } from "react";
-import { Row, Col } from 'antd';
-import { DynamicFormSchema, Field, Value, Group, Subscription } from './models/dynamic-form-schema';
+import React, { useState } from "react";
+import { Row, Col, ConfigProvider } from 'antd';
+import { DynamicFormSchema, Field, Group } from './models/dynamic-form-schema';
 import TableView from './table-view';
 import FormView from './form-view';
 import LayoutView from './layout-view';
-import { allForms, onChange, setInitialLoadingStatus, handleAllSubscriptions, isInitialLoading, setSelectedNode, getSelectedNode, handleOnclickForEditMode, masterdata, setMasterdata } from './services/dynamic-form-service';
+import { allForms, onChange, setInitialLoadingStatus, handleAllSubscriptions, isInitialLoading, setSelectedNode, getSelectedNode, handleOnclickForEditMode, setMasterdata, selectNode } from './services/dynamic-form-service';
 import _ from 'lodash'
-
-
 import type { FormInstance } from 'antd/es/form';
 
 
 const DynamicForm = (props: any): JSX.Element => {
+
     const selectedNode = getSelectedNode();
-    if (props.data.editMode && !selectedNode.form) {
+
+    if (props.data.editMode) {
         setSelectedNode({ parents: [], form: props.data.name });
+        setTimeout(() => selectNode(getSelectedNode()));
     }
 
     setTimeout(() => {
@@ -22,11 +23,16 @@ const DynamicForm = (props: any): JSX.Element => {
             setInitialLoadingStatus(false);
             handleAllSubscriptions();
         }
-
-        // console.log('allSubscriptionsPath', allSubscriptionsPath)
     });
 
-    return DynamicView(props);
+    //const df
+    return <ConfigProvider
+        theme={{
+
+        }}
+    >
+        {DynamicView(props)}
+    </ConfigProvider>;
 }
 
 export const DynamicView = (props: any): JSX.Element => {
@@ -93,33 +99,34 @@ export const DynamicView = (props: any): JSX.Element => {
         }
     }
 
-    const doubleClick = (onClickProps: any) => {
-        console.log('doubleClick');
-        clickedOnce = undefined;
-        if (onClickProps.data.name != selectedData?.form) return;
-        props?.onClick(onClickProps);
-    };
+    // const click = (onClickProps: any) => {
+    //     clickedOnce = undefined;
+    //     if (onClickProps.data.name != selectedData?.form) return;
+    //     props?.onClick(onClickProps);
+    // };
 
     const onClick = (onClickProps: any) => {
-console.log('onClick', onClickProps.domEvent.detail)
         if (!props?.onClick) return;
 
-        if (!onClickProps.data.editMode) {
+        if (!onClickProps?.data?.editMode) {
             props?.onClick(onClickProps);
             return;
         }
-        selectedData = handleOnclickForEditMode(onClickProps)
-        if (!_delayedClick) {
-            _delayedClick = _.debounce(doubleClick, 300);
-        }
-        if (clickedOnce) {
-            _delayedClick.cancel();
-            clickedOnce = false;
-            props?.onClick(onClickProps);
-        } else {
-            _delayedClick(onClickProps);
-            clickedOnce = true;
-        }
+
+        selectedData = handleOnclickForEditMode(onClickProps, props);
+        props?.onClick(onClickProps, selectedData);
+
+        // if (!_delayedClick) {
+        //     _delayedClick = _.debounce(click, 300);
+        // }
+        // if (clickedOnce) {
+        //     _delayedClick.cancel();
+        //     clickedOnce = false;
+        //     props?.onClick(onClickProps);
+        // } else {
+        //     _delayedClick(onClickProps);
+        //     clickedOnce = true;
+        // }
     }
 
     if (formData.mode === 'form') section = <FormView
@@ -150,7 +157,7 @@ console.log('onClick', onClickProps.domEvent.detail)
             form?: FormInstance
         ) => fieldChange({ _, allFields, index, form, from: 'layout', formData })}
         onDrop={props?.onDrop}
-        onAddRow={formData.onAddRow} />
+        onAddRow={formData?.onAddRow} />
 
     const rowProps: any = {
         justify: formData.justify
@@ -163,7 +170,7 @@ console.log('onClick', onClickProps.domEvent.detail)
         //   width:'100%'
         //overflow: 'hidden'
     }}>
-        <Row {...rowProps}    >
+        <Row {...rowProps}>
             <Col flex={formData.flex}>
                 {section}
             </Col>
@@ -242,6 +249,6 @@ export const setValues = (formName: string, _values: { [key: string]: any } | [{
     handleAllSubscriptions();
 }
 export const reRender = (formName: string) => {
-    allForms[formName]?.setFormData({ ...allForms[formName].formData});
+    allForms[formName]?.setFormData({ ...allForms[formName].formData });
 }
 export default DynamicForm;

@@ -8,8 +8,8 @@ import { update } from 'lodash';
 
 function App() {
 
-  const formData: DynamicFormSchema = {
-    name: "newForm",
+  const Example: DynamicFormSchema = {
+    name: "Example",
     mode: "form", // table, object
     autoSave: false,
     layout: 'vertical',
@@ -536,7 +536,7 @@ function App() {
   }
 
   const handleClick = () => {
-    formData.fields.input.label = "hello";
+    Example.fields.input.label = "hello";
     // const vals = getValues();
     // console.log(vals)
 
@@ -544,10 +544,10 @@ function App() {
   return (
     <div className="App">
 
-      {/* <DynamicForm data={formData} />*/}
+      <DynamicForm data={Example} />
       
 
-      <DynamicForm data={page} />
+      {/* <DynamicForm data={page} /> */}
 <button onClick={handleClick}>Save</button> 
     </div>
   );

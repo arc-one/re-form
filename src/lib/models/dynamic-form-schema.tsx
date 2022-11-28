@@ -18,7 +18,7 @@ export class DynamicFormSchema {
     groups?: { [key: string]: Group; };
     minRows?: number;
     defaultSpan?: number;
-    gutterX?: number = 30;
+    gutterX?: number;
     gutterY?: number = 0;
     justify?: string = 'start';
     size?: 'large' | 'middle' | 'small';
@@ -109,7 +109,7 @@ export class Field {
     drawerTitle?:any;
     visible?: boolean;
     width?: string | number;
-    zIndex?: number;
+   // zIndex?: number;
     onClose?: any;
 
 
@@ -259,6 +259,45 @@ export class Field {
     //valuePropName?: boolean = false;
     //wrapperCol?: boolean = false;
     // setValue?: any;
+
+
+    //Image
+    alt?: string;
+    fallback?: string;
+    //height
+    //placeholder
+    preview?: boolean;
+    src?: string;
+    //width
+
+    //Styling
+    borderSize?: number;
+    borderColor?: string;
+    borderType?: string;
+    borderLeft?: boolean;
+    borderRight?: boolean;
+    borderTop?: boolean;
+    borderBottom?: boolean;
+    backgroundColor?: string;
+    backgroundTransparency?: number;
+
+    shadowOffsetX?: number;
+    shadowOffsetY?: number;
+    shadowBlurRadius?: number;
+    shadowSpreadRadius?: number;
+    shadowColor?: string;
+
+    fontType?: string;
+    fontSize?: number;
+    fontColor?: string;
+    textAlign?: string;
+    position?: string;
+    zIndex?: number;
+
+    minHeight?: number;
+    //minWidth?: number;
+    
+
 }
 
 export class Subscription {

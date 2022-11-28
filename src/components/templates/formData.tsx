@@ -1,25 +1,38 @@
-import { DynamicFormSchema, Field } from '../lib/models/dynamic-form-schema';
-import { setForm, setValues, getForm, reRender } from '../lib/index';
-
+import { DynamicFormSchema } from '../../lib/models/dynamic-form-schema';
+import { formFieldInitialValues } from '../builder/formFieldInitialValues';
 
 export const formData: DynamicFormSchema = {
     name: "formData",
     mode: "form", // table, object
     editMode: true,
+    padding:"0px 15px",
     //defaultSpan:8,
+    gutterX:30,
     fields: {
       firstName: {
+        ...formFieldInitialValues,
         label: "First Name",
-        // options: [
-        //   {
-        //     label:'1',
-        //     value:'ssssss'
-        //   }
-        // ]
+        placeholder: "Type First Name",
       },
+      middleName: {
+        ...formFieldInitialValues,
+        label: "Middle Name",
+        placeholder: "Type Middle Name",
+      },
+
       lastName: {
+        ...formFieldInitialValues,
         label: "Last Name",
+        placeholder: "Type Last Name",
       },
+
+      phoneNumber: {
+        ...formFieldInitialValues,
+        label: "Phone Number",
+        placeholder: "Type Phone Name",
+      },
+
+      
       // displayName: {
       //   label: "Display Name",
       //   span: 24,

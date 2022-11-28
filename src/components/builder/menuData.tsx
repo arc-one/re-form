@@ -1,7 +1,4 @@
-import { DynamicFormSchema, Field } from '../lib/models/dynamic-form-schema';
-import { allForms } from '../lib/services/dynamic-form-service';
-import { addRow } from '../lib/index';
-import { yesno } from './_common';
+import { DynamicFormSchema } from '../../lib/models/dynamic-form-schema';
 
 export const menuData: DynamicFormSchema = {
     name: "menuData",

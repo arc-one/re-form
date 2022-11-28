@@ -1,12 +1,10 @@
-import { builderFormData } from '../system/builderFormData';
-import { builderFieldData, builderFieldInitialValues } from '../system/builderFieldData';
-import { menuData } from '../system/menuData';
-import { builderFieldOptions } from '../system/builderFieldOptions';
-import { builderAdvancedFieldData } from '../system/builderAdvancedFieldData';
-import { DynamicFormSchema, Field } from '../lib/models/dynamic-form-schema';
-import { yesno, fieldMapSubscriptions as subscriptions } from './_common';
-import { typeMapping } from './types-mapping';
-import { addRow, removeRow, getForm, setForm, getValue, setFields } from '../lib/index';
+import { builderFormData } from './builderFormData';
+import { builderFieldData } from './builderFieldData';
+import { builderFieldOptions } from './builderFieldOptions';
+import { builderAdvancedFieldData } from './builderAdvancedFieldData';
+import { DynamicFormSchema } from '../../lib/models/dynamic-form-schema';
+import { typeMapping } from './services/types-mapping';
+import { setFields } from '../../lib/index';
 
 export const builderLayout: DynamicFormSchema = {
     name: "builderLayout",

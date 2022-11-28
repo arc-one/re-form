@@ -16,7 +16,7 @@ const LayoutView = ({ data, onChange, margin = "0px", padding = "0px", onAddRow,
         if (props.field?.onSelect) props.field.onSelect(props)
     }
 
-    return <Row id={formData.name + '-node'}> {
+    return <Row id={formData.name + '-node'} gutter={[data.gutterX, data.gutterY]}> {
 
         Object.keys(formData.fields).map((fieldName: string, index) => {
             const field: any = formData.fields[fieldName];
@@ -132,8 +132,9 @@ const LayoutView = ({ data, onChange, margin = "0px", padding = "0px", onAddRow,
                 onDragStart={(e) => dragStart(e, index)}
                 onDragEnter={(e) => dragEnter(e, index)}
                 onDragEnd={(e:any) => drop(e, {onDrop})}
-                className="element" 
+                className={data.editMode?"element edit-mode":"element"} 
                 id={data.name + '-' + fieldName + '-element'}
+                flex={field.flex}
                 span={field?.span || 24} key={index + '-col'}>
                 {layoutitems}
             </Col>

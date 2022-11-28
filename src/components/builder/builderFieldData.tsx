@@ -1,37 +1,7 @@
-import { DynamicFormSchema, Field } from '../lib/models/dynamic-form-schema';
-import { yesno, fieldMapSubscriptions as subscriptions } from './_common';
-import { addRow, removeRow, getForm, setForm, getValue, setFields, setValues } from '../lib/index';
-import { builderEmptyLayout } from './builderEmptyLayout';
-import { getSelectedNode, allForms } from '../lib/services/dynamic-form-service';
-
-
-
-export const builderFieldInitialValues: any = {
-    type: 'input',
-    readOnly: false,
-    optionType: 'default',
-    span: 12,
-    required: false,
-    hidden: false,
-    disabled: false,
-    autoFocus: false,
-    backfill: false,
-    defaultActiveFirstOption: false,
-    defaultOpen: false,
-    open: false,
-    // colon: false,
-    // bordered: true,
-    allowClear: false,
-    // size: "middle",
-    // options: [
-    //     {
-    //         key: 1,
-    //         value: 1,
-    //         label:'one' 
-    //     }
-    // ]
-}
-
+import { DynamicFormSchema } from '../../lib/models/dynamic-form-schema';
+import { yesno, fieldMapSubscriptions as subscriptions } from './services/_common';
+import { addRow } from '../../lib/index';
+import { formFieldInitialValues } from './formFieldInitialValues';
 
 export const builderFieldData: DynamicFormSchema = {
     name: "builderFieldData",
@@ -41,18 +11,17 @@ export const builderFieldData: DynamicFormSchema = {
     defaultSpan: 24,
     gutterX: 0,
     gutterY: 0,
-    labelSpan: 7,
+    labelSpan: 10,
     fields: {
         name: {
             label: "Field Name",
             required: true,
             disabled: true,
-            subscriptions: [...subscriptions]
+            subscriptions: [...subscriptions],
         },
         label: {
             label: "Label",
-            subscriptions: [...subscriptions]
-
+            subscriptions: [...subscriptions],
         },
         type: {
             type: "select",
@@ -249,7 +218,7 @@ export const builderFieldData: DynamicFormSchema = {
             },
         },
     },
-    values: [builderFieldInitialValues]
+    values: [formFieldInitialValues]
 }
 
 

@@ -21,10 +21,6 @@ html {
   border: 1px solid #434343;
 }
 
-tr .ant-form-item {
-  margin-bottom: 0;
-}
-
 .left-side {
   border-right: 1px solid #ddd;
 }
@@ -42,25 +38,72 @@ tr .ant-form-item {
   width: 700px;
 }
 
-.ant-layout {
-  background: transparent;
-}
-
 .node-selected {
   border: 1px solid #333;
 }
-
-.node-selected > div > .node-element:hover, .node-selected > .node-element:hover {
-  outline: 1px dashed  rgb(112, 112, 112);
+.node-selected>div>.node-element,
+.node-selected>.node-element {
+  height: 100%;
+}
+.node-selected>div>.node-element:hover,
+.node-selected>.node-element:hover {
+  outline: 1px dashed rgb(112, 112, 112);
   outline-offset: -2px;
   cursor: pointer;
 }
 
-.element-selected, .element-selected:hover  {
+.element-selected,
+.element-selected:hover {
   outline: 2px solid rgb(165, 72, 237) !important;
-  outline-offset: -3px  !important;
+  outline-offset: -3px !important;
 }
 
-.ant-layout-header {
-  background-color: #f0f2f5;
+
+
+/* Tesla Theme overrides */
+
+
+tr .ant-form-item {
+  margin-bottom: 0;
+}
+
+.ant-layout {
+  background: transparent;
+}
+
+.ant-select-item-option {
+  border-radius: 0 !important;
+}
+
+.ant-select-item-option-selected {
+  background-color: #eee !important;
+  border-radius: 0 !important;
+}
+
+.ant-select-item-option-active {
+  border-radius: 0 !important;
+}
+
+.ant-select-dropdown {
+  padding: 13px 0;
+  border: 1px solid #ddd;
+}
+
+
+
+
+
+/* .ant-input:hover, .ant-input-number-input:hover, .ant-select-selector:hover {
+  border-color: #A2A3A5 !important;
+} */
+/* .ant-input:focus, .ant-input-number-input:focus, .ant-select-selector:focus {
+  border-color: #111 !important;
+} */
+
+.ant-form-vertical .ant-form-item-label {
+  padding: 0 0 2px 11px;
+}
+
+.ant-form-item-label label {
+  color: #5C5E62 !important;
 }

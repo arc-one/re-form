@@ -1,8 +1,6 @@
-import { addRow, removeRow, getForm, setForm, getValue, setFields, setValues } from '../lib/index';
+import { setFields, setValues } from '../../../lib/index';
 import { typeMapping } from './types-mapping';
-import { DynamicFormSchema, Field } from '../lib/models/dynamic-form-schema';
-import { builderFieldData, builderFieldInitialValues } from '../system/builderFieldData';
-
+import { DynamicFormSchema, Field } from '../../../lib/models/dynamic-form-schema';
 
 export const yesno = [
   {

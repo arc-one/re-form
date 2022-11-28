@@ -1,5 +1,5 @@
-import { DynamicFormSchema, Field } from '../lib/models/dynamic-form-schema';
-import { yesno } from './_common';
+import { DynamicFormSchema } from '../../lib/models/dynamic-form-schema';
+import { yesno } from './services/_common';
 
 export const builderFormData: DynamicFormSchema = {
   name: "builderFormData",
@@ -9,7 +9,7 @@ export const builderFormData: DynamicFormSchema = {
   defaultSpan: 24,
   gutterX: 0,
   gutterY: 0,
-  labelSpan: 7,
+  labelSpan: 10,
   //size: 'small',
   fields: {
 
@@ -39,7 +39,8 @@ export const builderFormData: DynamicFormSchema = {
     autoSave: {
       type: "radio",
       label: "Auto Save",
-      options: yesno
+      options: yesno,
+      disabled: true
     },
     layout: {
       type: "radio",
@@ -105,11 +106,11 @@ export const builderFormData: DynamicFormSchema = {
     },
     margin: {
       label: "Margin",
-      type: 'number',
+     // type: 'number',
     },
     padding: {
       label: "Padding",
-      type: 'number',
+     // type: 'number',
     },
     flex: {
       label: "Flex",
@@ -141,11 +142,11 @@ export const builderFormData: DynamicFormSchema = {
     },
     wrapperSpan: {
       type: 'number',
-      label: "Wrapper Span",
+      label: "Span",
     },
     wrapperOffset: {
       type: 'number',
-      label: "Wrapper Offset",
+      label: "Offset",
     },
 
 
